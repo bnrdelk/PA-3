@@ -1,7 +1,7 @@
 public class ChainingTableClass {
     private Node[] chainingTable;
     private int size;
-    private HashFunctions hashing = new HashFunctions(11,17,4001);
+    private HashFunctions hashing = new HashFunctions(5,7,4001);
 
     // const
     public ChainingTableClass(int tableSize) {
@@ -43,5 +43,19 @@ public class ChainingTableClass {
         }
         // if not found
         return null;
+    }
+
+    public void displayChaining() {
+        for (int i = 0; i < chainingTable.length; i++) {
+            System.out.print("Index " + i + ": ");
+
+            Node node = chainingTable[i];
+            while (node != null) {
+                System.out.print(node.student.getID() + " -> ");
+                node = node.next;
+            }
+            // if empty, mark them null
+            System.out.println("null");
+        }
     }
 }

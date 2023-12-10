@@ -10,18 +10,10 @@ public class HashFunctions {
     }
 
     public int hash(int x) {
-        int result = ((a * x + b) % 1001) % m;
-        // check to avoid negative indexes
-        result = check(result);
+        int result = ((a * x + b) / 1001) % m;
         return result;
     }
 
-    private int check(int result) {
-        if(result <= 0){
-            return result + m;
-        }
-        return result;
-    }
 
     public int getM() {
         return m;
