@@ -31,25 +31,25 @@ public class DataReader {
             return studentsList;
         }
 
-    public static List<Integer> fetchNumbersAsArrayList(String fileName) {
-        List<Integer> primeNumbersList = new ArrayList<>();
-
+    public static int[] fetchNumbersAsArray(String fileName) {
+        int[] primeNumbersArray = new int[0]; // Initialize the array
+    
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
-            String numberData;
-            int primeNum;
-
-            // read until the end, split data to variables (each line has 10 numbers)
-            while ((numberData = bufferedReader.readLine()) != null) {
+            String numberData = bufferedReader.readLine();
+            if (numberData != null) {
                 String[] data = numberData.split(" ");
-                for(int i=0; i<10; i++){
-                    primeNum = Integer.parseInt(data[i]);
-                    primeNumbersList.add(primeNum);
+                primeNumbersArray = new int[data.length];
+    
+                for (int i = 0; i < data.length; i++) {
+                    primeNumbersArray[i] = Integer.parseInt(data[i]);
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return primeNumbersList;
+    
+        return primeNumbersArray;
     }
-    }
+    
+    
+}

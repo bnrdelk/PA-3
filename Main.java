@@ -8,9 +8,7 @@ public class Main {
         DataReader dataReader = new DataReader();
         List<Student> studentsList = dataReader.fetchStudentsAsArrayList("students.txt");
 
-        // !!burayı direkt array olarak okusak daha iyi olabilir castingsiz arama yapmak icin getnextprimenum'da
-        List<Integer> primeNumbersList = dataReader.fetchNumbersAsArrayList("primeNumbers.txt");
-        Object[] primeNumbersArray = primeNumbersList.toArray();
+        int[] primeNumbersArray = DataReader.fetchNumbersAsArray("primeNumbers.txt");
 
         /*  CHAINING
             fetch & allocate students to table
@@ -36,18 +34,16 @@ public class Main {
         long startRandomSearch = System.currentTimeMillis();
 
         // search and bring hundred random students from the table.
-        List<Student> randomStudentList = bringRandomStudentsFromTable(100, chainingTable, studentsList);
+        List<Student> randomStudentList = bringRandomStudentsFromChainingTable(100, chainingTable, studentsList);
 
         long finishRandomSearch = System.currentTimeMillis();
         long randomSearchDuration = finishRandomSearch-startRandomSearch;
 
         System.out.println("Part-3 b)Search & bring random students duration: " + randomSearchDuration + " ms");
-        //System.out.println(randomStudentList);
-
 
         /*  OPEN ADDRESSING
             fetch & allocate students to table
-*/
+        */
         long startAllocatingOpenAddressing = System.currentTimeMillis();
         OpenAdressingClass openAdressingTable = new OpenAdressingClass(401, primeNumbersArray);
 
@@ -61,9 +57,50 @@ public class Main {
         long allocateOpenAddressingDuration = -startAllocatingOpenAddressing+finishAllocatingOpenAddressing;
         System.out.println("Part-4 a)Fetch students from arraylist & allocate to table duration: " + allocateOpenAddressingDuration + " ms");
 
+        /*  OPEN ADRESSING
+            search random 100 students
+        */
+        startRandomSearch = System.currentTimeMillis();
+
+        // search and bring hundred random students from the table
+        List<Student> randomStudentList2 = bringRandomStudentsFromOpenAdressingTable(100, openAdressingTable, studentsList);
+        
+        finishRandomSearch = System.currentTimeMillis();
+        randomSearchDuration = finishRandomSearch - startRandomSearch;
+
+        System.out.println("Part-4 b)Search & bring random students duration: " + randomSearchDuration + " ms");
+
+        // display the randomly searched students
+        /*System.out.println("Students from ChainingTable");
+        for(Student student : randomStudentList){
+            System.out.println(student);
+        }
+
+        System.out.println("Students from OpenAdressingTable");
+        for(Student student : randomStudentList2){
+            System.out.println(student);
+        }*/
+
     }
 
-    private static List<Student> bringRandomStudentsFromTable(int i, ChainingTableClass chainingTable, List<Student> studentsList) {
+    private static List<Student> bringRandomStudentsFromOpenAdressingTable(int i, OpenAdressingClass openAdressingTable, List<Student> studentsList){
+        List<Student> randomStudentList = new ArrayList<>();
+        Student randomStudent = new Student("null", "null", 0, "null", "null");
+
+        for(int count = 0; count < 100; count++){
+            // loop until find a valid student
+            do{
+                int randomStudentID = getRandomStudentID(studentsList);
+                randomStudent = openAdressingTable.find(randomStudentID);
+            }while(randomStudent == null);
+            
+            // add to the list
+            randomStudentList.add(randomStudent);
+        }
+        return randomStudentList;
+    }
+
+    private static List<Student> bringRandomStudentsFromChainingTable(int i, ChainingTableClass chainingTable, List<Student> studentsList) {
         List<Student> randomStudentList = new ArrayList<>();
         Student randomStudent = new Student("null","null",0,"null","null");
 
@@ -86,5 +123,4 @@ public class Main {
 
         return studentsList.get(random).getID();
     }
-
 }

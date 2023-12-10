@@ -4,9 +4,9 @@ public class OpenAdressingClass {
     private int capacity;
     private HashFunctions hashing;
     private ProbingFunctions probing;
-    private Object[] primeNumbers;
+    private int[] primeNumbers;
 
-    public OpenAdressingClass(int initialCapacity, Object[] primeNumbers) {
+    public OpenAdressingClass(int initialCapacity, int[] primeNumbers) {
         capacity = initialCapacity;
         openAdressingTable = new Student[capacity];
         this.primeNumbers = primeNumbers;
@@ -64,5 +64,22 @@ public class OpenAdressingClass {
             }
         }
         return -1;
+    }
+
+    public Student find(int studentID){
+        //get initial index using hashing
+        int index = hashing.hash(studentID);
+        int i = 0;
+
+        while(openAdressingTable[index] != null){
+            if(openAdressingTable[index].getID() == studentID){
+                return openAdressingTable[index];
+            }
+
+            index = (index + probing.probe(studentID, i)) % capacity;
+            i++;
+        }
+
+        return null;
     }
 }
